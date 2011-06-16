@@ -1070,7 +1070,7 @@ ClusterIcon.prototype.triggerClusterMouseover = function() {
 /**
  * Triggers the clustermouseout event
  */
-ClusterIcon.prototype.triggerClusteMouseout = function() {
+ClusterIcon.prototype.triggerClusterMouseout = function() {
     var markerClusterer = this.cluster_.getMarkerClusterer();
     google.maps.event.trigger(markerClusterer, 'clustermouseout', this.cluster_);
 }
