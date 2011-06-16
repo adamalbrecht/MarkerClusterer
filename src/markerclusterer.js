@@ -1009,6 +1009,12 @@ Cluster.prototype.updateIcon = function() {
   this.clusterIcon_.show();
 };
 
+/**
+ * Updates the URL of the cluster icon
+ */
+Cluster.prototype.updateIconUrl = function(new_url) {
+  this.clusterIcon_.div_.style["background-image"] = "url(" + new_url + ")";
+};
 
 /**
  * A cluster icon
