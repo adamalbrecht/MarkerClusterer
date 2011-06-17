@@ -68,6 +68,10 @@ function MarkerClusterer(map, opt_markers, opt_options) {
   this.extend(MarkerClusterer, google.maps.OverlayView);
   this.map_ = map;
 
+  //Add a 'cluster' property to markers so it can access its own cluster
+  google.maps.Marker.prototype.cluster = null;
+  
+
   /**
    * @type {Array.<google.maps.Marker>}
    * @private
@@ -788,6 +792,7 @@ MarkerClusterer.prototype.createClusters_ = function() {
 
   for (var i = 0, marker; marker = this.markers_[i]; i++) {
     if (!marker.isAdded && this.isMarkerInBounds_(marker, bounds)) {
+      marker.cluster = null;
       this.addToClosestCluster_(marker);
     }
   }
@@ -860,6 +865,7 @@ Cluster.prototype.addMarker = function(marker) {
   }
 
   marker.isAdded = true;
+  marker.cluster = this;
   this.markers_.push(marker);
 
   var len = this.markers_.length;
