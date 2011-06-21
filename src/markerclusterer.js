@@ -43,11 +43,13 @@
 *                cluster.
 *     'zoomOnClick': (boolean) Whether the default behaviour of clicking on a
 *                    cluster is to zoom into it.
-*     'averageCenter': (boolean) Wether the center of each cluster should be
+*     'averageCenter': (boolean) Whether the center of each cluster should be
 *                      the average of all markers in the cluster.
 *     'minimumClusterSize': (number) The minimum number of markers to be in a
 *                           cluster before the markers are hidden and a count
 *                           is shown.
+*     'showMarkerCount': (boolean) Whether or not to show a number representing
+*                         the # of markers in a given cluster on the cluster's icon
 *     'styles': (object) An object that has style properties:
 *       'url': (string) The image url.
 *       'height': (number) The image height.
@@ -150,6 +152,16 @@ function MarkerClusterer(map, opt_markers, opt_options) {
 
     if (options['averageCenter'] != undefined) {
         this.averageCenter_ = options['averageCenter'];
+    }
+    
+    /**
+    * @type {boolean}
+    * @private
+    */
+    this.showMarkerCount_ = false;
+
+    if (options['showMarkerCount'] != undefined) {
+        this.showMarkerCount_ = options['showMarkerCount'];
     }
 
     this.setupStyles_();
@@ -311,6 +323,14 @@ MarkerClusterer.prototype.isAverageCenter = function() {
     return this.averageCenter_;
 };
 
+/**
+* Whether marker count is to be shown on an icon
+*
+* @return {boolean} True if showMarkerCount_ is true.
+*/
+MarkerClusterer.prototype.showMarkerCount = function() {
+    return this.showMarkerCount_;
+};
 
 /**
 *  Returns the array of markers in the clusterer.
@@ -368,10 +388,10 @@ MarkerClusterer.prototype.calculator_ = function(markers, numStyles) {
         dv = parseInt(dv / 10, 10);
         index++;
     }
-
+    var iconText = (this.showMarkerCount) ? count : "";
     index = Math.min(index, numStyles);
     return {
-        text: count,
+        text: iconText,
         index: index
     };
 };
