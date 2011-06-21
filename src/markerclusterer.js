@@ -50,6 +50,8 @@
 *                           is shown.
 *     'showMarkerCount': (boolean) Whether or not to show a number representing
 *                         the # of markers in a given cluster on the cluster's icon
+*     'onClusterAdded': (function) Fires whenever a cluster is added to the dom.
+*                       Passes the Cluster object a parameter
 *     'styles': (object) An object that has style properties:
 *       'url': (string) The image url.
 *       'height': (number) The image height.
@@ -153,7 +155,7 @@ function MarkerClusterer(map, opt_markers, opt_options) {
     if (options['averageCenter'] != undefined) {
         this.averageCenter_ = options['averageCenter'];
     }
-    
+
     /**
     * @type {boolean}
     * @private
@@ -162,6 +164,16 @@ function MarkerClusterer(map, opt_markers, opt_options) {
 
     if (options['showMarkerCount'] != undefined) {
         this.showMarkerCount_ = options['showMarkerCount'];
+    }
+
+    /**
+    * @type {function}
+    * @private
+    */
+    this.onClusterAdded_ = null;
+
+    if (options['onClusterAdded'] != undefined) {
+        this.onClusterAdded_ = options['onClusterAdded'];
     }
 
     this.setupStyles_();
@@ -330,6 +342,15 @@ MarkerClusterer.prototype.isAverageCenter = function() {
 */
 MarkerClusterer.prototype.showMarkerCount = function() {
     return this.showMarkerCount_;
+};
+
+/**
+* Function to execute when a cluster is added to the map
+*
+* @return {function} with a paramter called cluster of type Cluster
+*/
+MarkerClusterer.prototype.onClusterAdded = function() {
+    return this.onClusterAdded_;
 };
 
 /**
@@ -939,6 +960,9 @@ Cluster.prototype.getBounds = function() {
 *
 */
 Cluster.prototype.hasMultipleMarkers = function() {
+    if (this.markers_ == undefined) {
+        return false;
+    }
     return (this.markers_.length > 1);
 };
 
@@ -1140,6 +1164,9 @@ ClusterIcon.prototype.onAdd = function() {
     google.maps.event.addDomListener(this.div_, 'mouseout', function() {
         that.triggerClusterMouseout();
     });
+    if (this.cluster_.markerClusterer_.onClusterAdded_ != null) {
+        this.cluster_.markerClusterer_.onClusterAdded_(this.cluster_);
+    }
 };
 
 
